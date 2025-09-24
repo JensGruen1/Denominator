@@ -52,7 +52,7 @@ comparisonDenominationWithPreviousAmount: DenominationResponse = {amount:0, deno
 
 
 amount: number = 0.1;
-currency: number[]= [200,100,50,20,10,5,2,1,0.50,0.20,0.10,0.05,0.02,0.01];
+currencyInCent: number[]= [20000,10000,5000,2000,1000,500,200,100,50,20,10,5,2,1];
 
 
 //isCurrencyEuro: boolean = true;
@@ -69,19 +69,6 @@ constructor(private http:HttpClient) {}
 
 
 
-/* onSubmit() {
-this.http.get<string> ('http://localhost:8080/api/test').subscribe({
-  next: (data) => {
-this.test =  data;
-console.log('data from test: ' + data)
-
-  }
-})
-
-} */
-
-
-
 
 onSubmit() {
 console.log(this.language, this.showDenomination);
@@ -91,11 +78,15 @@ this.showDenomination = true;
 this.previousDenominationWithAmount= this.previousDenominationWithAmountIter;
 this.denominationWithAmount = this.calculateDenomination(this.amount);
 this.previousDenominationWithAmountIter = this.denominationWithAmount;
+console.log('denominationWithAmount: ' , this.denominationWithAmount );
+
+if(this.previousDenominationWithAmount.amount !=0) { 
+  this.showComparison = true;
+  this.comparisonDenominationWithPreviousAmount = this.calculateComparison(this.denominationWithAmount, this.previousDenominationWithAmount);
+}
+  
 
 
-
-
- console.log('Angular not yet implemented ' + this.amount);
 } else if (this.language === 'Java') {
 //calculation by backend
 this.showDenomination = true;
@@ -106,7 +97,6 @@ next: (data) => {
   this.previousDenominationWithAmountIter = data;
 
 if(this.previousDenominationWithAmount.amount !=0) {
-  console.log('in comparison with previous denomination: ', this.previousDenominationWithAmount);
   this.showComparison = true;
   this.http.post<DenominationResponse>('http://localhost:8080/api/calculateComparison',
    { current:this.denominationWithAmount,
@@ -134,8 +124,61 @@ if(this.previousDenominationWithAmount.amount !=0) {
 
 
 calculateDenomination(amount:number):DenominationResponse {
-return {amount:0, denomination: {}};
+let quantity:number = 0;
+const denominationMap:Record<number,number> = {};
+const denominationResponse:DenominationResponse = {amount:0, denomination:{}};
+  amount = Math.round(amount*100);
+
+for ( const value of this.currencyInCent) {
+if (amount % value != amount && amount % value != 0) {
+  quantity = Math.floor(amount/value);
+  amount = amount % value;
+  denominationMap[value/100] = quantity;
+} else if (amount % value === 0) {
+  quantity = Math.floor(amount/value);
+  denominationMap[value/100] = quantity;
+  break;
+}
+}
+
+denominationResponse.amount = this.amount;
+denominationResponse.denomination = denominationMap;
+
+return denominationResponse;
 } 
+
+
+calculateComparison(current: DenominationResponse, previous: DenominationResponse):DenominationResponse {
+const comparisonMap:Record<number,number> = {};
+const comparison:DenominationResponse = {amount:0, denomination:{}};
+
+console.log('current denomination: ', current);
+
+for (const [key,value] of Object.entries(previous.denomination)) {
+    const numKey = Number(key);
+    const numValue = Number(value);
+    console.log(' key, value : ',numKey, numValue);
+    comparisonMap[numKey] = -numValue;
+    console.log(' in for loop1: ', comparisonMap);
+}
+
+console.log ('first step in comparison: ', comparisonMap);
+
+for (const [key,value] of Object.entries(current.denomination)) {
+    const numKey = Number(key);
+    const numValue = Number(value);
+    comparisonMap[numKey] = (comparisonMap[numKey] || 0 ) + value;
+
+}
+console.log('Angular comparison map: ', comparisonMap)
+comparison.amount = previous.amount;
+comparison.denomination = comparisonMap;
+
+return  comparison;
+}
+
+
+
 
 
 getDenominationMapFromDenomationResponseObject(denominationResponse: DenominationResponse): [string, number][] {
