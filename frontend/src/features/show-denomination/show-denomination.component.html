@@ -18,12 +18,17 @@
 </form>
 
 
+
+<div *ngIf="languageSelectionError" class="alert alert-danger  justify-content-center mt-4 mx-auto" role="alert" style="width: 500px;">
+    Please choose a programming language. 
+</div>
+
+
 <div class="d-flex justify-content-center mt-4" *ngIf="showDenomination">
 <div  style="width: 500px;">
     
  <div class="d-flex justify-content-between mt-2" style="padding-left: 5px; padding-right: 5px;">
-  <div>New denomination:</div>
-  <div class="text-end">{{ denominationWithAmount.amount }}</div>
+  <div>New denomination:   {{ denominationWithAmount.amount }} </div>
 </div>
 
 
@@ -33,11 +38,11 @@
 
     <tr>
       <td colspan="2" class="table-active">Notes/Coins</td>
-      <td>Quantity</td>
+      <td class=" text-center">Quantity</td>
     </tr>
     <tr class="table" *ngFor="let entry of getDenominationMapFromDenomationResponseObject(denominationWithAmount)">
       <td colspan="2" class="table-active" >{{entry[0]}}</td> 
-      <td >{{entry[1]}}</td>
+      <td  class=" text-center" >{{entry[1]}}</td>
     </tr>
   </tbody>
 </table>
@@ -50,19 +55,18 @@
     <div  style="width: 500px;">
     
  <div class="d-flex justify-content-between mt-2" style="padding-left: 5px; padding-right: 5px;">
-  <div>Difference to: </div>
-  <div class="text-end">{{previousDenominationWithAmount.amount}}</div>
+  <div>Difference to: {{previousDenominationWithAmount.amount}}  </div>
 </div>
 <table style="width: 500px;" class="table table-dark mt-2 ">
   <tbody>
  
     <tr>
       <td colspan="2" class="table-active">Notes/Coins</td>
-      <td>Quantity</td>
+      <td class=" text-center">Quantity</td>
     </tr>
     <tr class="table" *ngFor="let entry of getDenominationMapFromDenomationResponseObject(comparisonDenominationWithPreviousAmount)">
       <td colspan="2" class="table-active" >{{entry[0]}}</td> 
-      <td>
+      <td class=" text-center">
         <span *ngIf="entry[1] > 0">+{{ entry[1] }}</span>
         <span *ngIf="entry[1] <= 0">{{ entry[1] }}</span>
       </td>
