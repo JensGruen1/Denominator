@@ -1,12 +1,24 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from '../features/navbar/navbar.component';
+import { ShowDenominationComponent } from '../features/show-denomination/show-denomination.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+   standalone: true,
+  imports: [
+    RouterOutlet,
+    NavbarComponent,
+    ShowDenominationComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'frontend';
+  selectedLanguage: string ='';
+
+  onLanguageChange(selectedLanguage:string) {
+    this.selectedLanguage = selectedLanguage;
+
+  }
 }
