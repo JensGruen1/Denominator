@@ -9,7 +9,7 @@ import { ShowDenominationComponent } from '../features/show-denomination/show-de
   imports: [
     RouterOutlet,
     NavbarComponent,
-    ShowDenominationComponent
+    ShowDenominationComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
