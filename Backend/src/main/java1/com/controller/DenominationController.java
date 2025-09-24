@@ -1,15 +1,9 @@
 package com.controller;
 
 
-import com.entity.Denomination;
-import com.entity.DenominationInt;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.service.DenominationService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
@@ -18,7 +12,6 @@ import java.util.TreeMap;
 public class DenominationController {
 
     private final DenominationService denominationService;
-
 
     public DenominationController(DenominationService denominationService) {
         this.denominationService = denominationService;
@@ -45,11 +38,9 @@ public class DenominationController {
         var response = new DenominationResponse(
                 request.previous().amount(),
                 denominationService.compareQuantityBeforeAfterMap(
-                        request.current.denomination(),
+                        request.current().denomination(),
                         request.previous().denomination())
         );
-
-        System.out.println("comparison: " + response);
 
         return ResponseEntity.ok(response);
     }
