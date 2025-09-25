@@ -1,11 +1,16 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
-import { ShowDenominationComponent } from './features/show-denomination/show-denomination.component';
 import { provideHttpClient } from '@angular/common/http';
 
-//bootstrapApplication(AppComponent, appConfig)
- // .catch((err) => console.error(err));
+/**
+ *   Bootstraps the Angular application.
+ *
+ * - The `AppComponent` is set as the root component of the application.
+ * - The `provideHttpClient()` function registers Angular's `HttpClient` as a global
+ *   provider, making it available for dependency injection across the app.
+ * - Any errors during bootstrap are caught and logged to the console.
+ *
+ */
 
   bootstrapApplication(AppComponent, {
   providers: [provideHttpClient()]
