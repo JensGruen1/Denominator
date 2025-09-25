@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { DenominationService } from '../../app/denominationService';
 
 
-interface DenominationResponse {
+export interface DenominationResponse {
   amount: number;
   denomination: Record<string, number>;
 }
@@ -16,7 +16,6 @@ interface DenominationResponse {
   imports: [
     CommonModule,
     FormsModule,
-    HttpClientModule
   ],
   templateUrl: './show-denomination.component.html',
   styleUrl: './show-denomination.component.css'
@@ -28,6 +27,7 @@ amount: number = 0;
 showDenomination: boolean = false;
 showComparison: boolean = false; 
 languageSelectionError = false;
+errorMessage = '';
 denomination: Map<number, number> = new Map();
 denominationWithAmount: DenominationResponse = {amount: 0, denomination:{}};
 previousDenomination: Map<number, number> = new Map();
@@ -73,9 +73,31 @@ if(this.previousDenominationWithAmount.amount !=0) {
   ).subscribe({
     next: (response) => {
       this.comparisonDenominationWithPreviousAmount = response;
+    },
+    error: (error) => {
+          if (error.status === 0) {
+          // Status 0 = kein Kontakt zum Backend
+          this.errorMessage = '❌ No connection to server';
+        } else if (error.status === 400) {
+          this.errorMessage = '❌ One of the denonminations is null or has wrong format';
+        }
+  
+    this.clearMessagesAfterDelay();
     }
-  })
+  });
+  
 }
+},
+error: (error) => {
+    if (error.status === 0) {
+          this.errorMessage = '❌ No connection to server';
+        } else if (error.status === 400) {
+          this.errorMessage = '❌ String values are not allowed';
+        }
+
+  this.clearMessagesAfterDelay();
+
+
 }
 });
 
@@ -88,15 +110,11 @@ if(this.previousDenominationWithAmount.amount !=0) {
 }
 
 
-
 getDenominationMapFromDenomationResponseObject(denominationResponse: DenominationResponse): [string, number][] {
   return Object.entries(denominationResponse.denomination)
    .sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]));
 }
 
-getAmountFromDenominationResponseObject(): [string, number][] {
-  return Object.entries(this.denominationWithAmount.amount)
-}
 
 
 onAmountInput(event: Event) {
