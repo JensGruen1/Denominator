@@ -1,4 +1,4 @@
-# Bank Account Denomination Calculator
+# Denomination Calculator
 
 A web application for calculating and comparing banknote and coin denominations of monetary amounts. The app allows calculations either **on the frontend** using Angular or **on the backend** using Spring Boot.
 
