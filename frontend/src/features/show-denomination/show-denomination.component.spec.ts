@@ -36,8 +36,6 @@ describe('ShowDenominationComponent', () => {
 
 
 
- 
-
 it('getDenominationMapFromDenomationResponseObject should sort in ascending orders by its keys', () => {
     
   const denominationObj: { [key: number]: number } = {
@@ -103,7 +101,6 @@ it(' should call backend when language is Java and set denominationWithAmount to
     expect(component.showDenomination).toBeTrue();
 
 });
-
 
 
 

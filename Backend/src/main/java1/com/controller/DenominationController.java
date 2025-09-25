@@ -7,6 +7,13 @@ import com.service.DenominationService;
 import java.util.TreeMap;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
+
+/**
+ * A controller with the two endpoints  getQuantityDenominationList and getComparisonDenominationList
+ * These endpoints calculate the denomination and the changes from one denomination to another
+ */
+
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api")
@@ -18,7 +25,20 @@ public class DenominationController {
         this.denominationService = denominationService;
     }
 
+    /**
+     *  A record to pass DTO's
+     * @param amount   of the denomination
+     * @param denomination  is the actual denomination
+     */
     public record DenominationResponse(String amount, TreeMap<Double, Integer> denomination) {}
+
+    /**
+     *  Aa GET endpoint to calculate the denomination in the backend
+     * @param amount
+     * @return  it returns a ResponseEntity which is status ok when there are no errors and
+     * it returns bad Request if there is somehow passed a string which cannot be parsed to double
+     */
+
 
     @GetMapping("/calculateDenomination/{amount}")
     public ResponseEntity<?> getQuantityDenominationList(@PathVariable String amount) {
@@ -38,7 +58,22 @@ public class DenominationController {
         }
     }
 
+    /**
+     *  A record to pass DTO's
+     * @param current   is the current denomination including the amount of the denomination
+     * @param previous  is the previous denomination including the amount of the denomination
+     */
+
     public record ComparisonRequest( DenominationResponse current, DenominationResponse previous) {}
+
+
+    /**
+     * An POST endpoint to calculate the changes from one denomination to another
+     * @param request  contains the current and previous denomination with the amount
+     * @return ResponseEntity.ok if there are no errors, ResponseEntity.badRequest if
+     * one of the denominations is accidentally null or the request has wrong format
+     */
+
 
     @PostMapping("/calculateComparison")
     public ResponseEntity<?> getComparisonDenominationList(@RequestBody ComparisonRequest request) {
