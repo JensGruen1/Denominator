@@ -20,4 +20,15 @@ describe('NavbarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
+  it('should emit selected language', () => {
+
+    spyOn(component.outputLanguage, 'emit');
+
+    component.onLanguageChange('Angular');
+
+    expect(component.outputLanguage.emit).toHaveBeenCalledWith('Angular');
+
+  })
 });
